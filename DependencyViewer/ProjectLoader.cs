@@ -34,16 +34,18 @@ namespace DependencyViewer
 
 			while(line != null)
 			{
-				if (!line.StartsWith("Project"))
+				if (line.StartsWith("Project") && line.Contains(".csproj"))
+				{
+					ProjectLoader project = ProjectProjectLine(line, filebase);
+					projects[project.ProjectIdentifier()] = project;
+
+					line = reader.ReadLine();
+				}
+				else
 				{
 					line = reader.ReadLine();
 					continue;
 				}
-
-				ProjectLoader project = ProjectProjectLine(line, filebase);
-				projects[project.ProjectIdentifier()] = project;
-
-				line = reader.ReadLine();
 			}
 		}
 

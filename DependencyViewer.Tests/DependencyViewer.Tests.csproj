@@ -73,10 +73,10 @@
     <Content Include="2proj_solution.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="testproject2.txt">
+    <Content Include="testproject2.csproj.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="testproject.txt">
+    <Content Include="testproject.csproj.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

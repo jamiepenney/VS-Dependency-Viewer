@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuickGraph.Graphviz</name>
+    </assembly>
+    <members>
+        <member name="M:QuickGraph.Graphviz.SvgHtmlWrapper.WrapSvg(System.String)">
+            <summary>
+            Creates a HTML file that wraps the SVG and returns the file name
+            </summary>
+            <param name="svgFileName"></param>
+            <returns></returns>
+        </member>
+        <member name="P:QuickGraph.Graphviz.FormatEdgeEventArgs`2.EdgeFormatter">
+            <summary>
+            Edge formatter
+            </summary>
+        </member>
+        <member name="P:QuickGraph.Graphviz.GraphvizAlgorithm`2.Output">
+            <summary>
+            Dot output stream.
+            </summary>
+        </member>
+        <member name="P:QuickGraph.Graphviz.GraphvizAlgorithm`2.ImageType">
+            <summary>
+            Current image output type
+            </summary>
+        </member>
+        <member name="T:QuickGraph.Graphviz.FileDotEngine">
+            <summary>
+            Default dot engine implementation, writes dot code to disk
+            </summary>
+        </member>
+    </members>
+</doc>

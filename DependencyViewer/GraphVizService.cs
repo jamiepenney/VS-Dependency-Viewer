@@ -5,7 +5,7 @@ using DependencyViewer.Properties;
 
 namespace DependencyViewer
 {
-	public class GraphVizInterface
+	public class GraphVizService
 	{
 		public void ExecGraphViz(string dotFile, string outputFilename)
 		{

@@ -8,9 +8,9 @@ using DependencyViewer.Properties;
 
 namespace DependencyViewer
 {
-	public partial class Window1
+	public partial class MainWindow
 	{
-		public Window1()
+		public MainWindow()
 		{
 			InitializeComponent();
 
@@ -80,7 +80,7 @@ namespace DependencyViewer
 			QuickGraphProcessor processor = new QuickGraphProcessor();
 			string filename = processor.ProcessSolution(loader);
 
-			GraphVizInterface graphViz = new GraphVizInterface();
+			GraphVizService graphViz = new GraphVizService();
 			graphViz.ExecGraphViz(filename, tbOutputFilename.Text);
 
 			Process.Start(tbOutputFilename.Text);

@@ -1,9 +1,13 @@
 ﻿using System;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using DependencyViewer.Common;
 using DependencyViewer.Properties;
 
 namespace DependencyViewer
@@ -74,10 +78,11 @@ namespace DependencyViewer
 
 		private void btnRender_Click(object sender, RoutedEventArgs e)
 		{
-			var loader = new SolutionLoader(File.ReadAllText(tbFilename.Text), tbFilename.Text);
+			var loader = new Solution(File.ReadAllText(tbFilename.Text), tbFilename.Text);
 			loader.LoadProjects();
 
 			QuickGraphProcessor processor = new QuickGraphProcessor();
+			Compose(processor);
 			string filename = processor.ProcessSolution(loader);
 
 			GraphVizService graphViz = new GraphVizService();
@@ -85,5 +90,12 @@ namespace DependencyViewer
 
 			Process.Start(tbOutputFilename.Text);
 		}
+
+		private void Compose(QuickGraphProcessor processor)
+		{
+			var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			var container = new CompositionContainer(new DirectoryCatalog(directory));
+			container.ComposeParts(processor);
+		} 
 	}
 }

@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyViewer", "Depende
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyViewer.Tests", "DependencyViewer.Tests\DependencyViewer.Tests.csproj", "{D7EBB98B-E3E8-4F2A-992F-C9D29BA90A51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyViewer.Common", "DependencyViewer.Common\DependencyViewer.Common.csproj", "{DF9AF4D2-C041-4D6D-84E5-4E9085E4EFFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProjectProcessor", "TestProjectProcessor\TestProjectProcessor.csproj", "{9EFE883A-60CA-4BBD-AF48-D5479C306663}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{D7EBB98B-E3E8-4F2A-992F-C9D29BA90A51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7EBB98B-E3E8-4F2A-992F-C9D29BA90A51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7EBB98B-E3E8-4F2A-992F-C9D29BA90A51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF9AF4D2-C041-4D6D-84E5-4E9085E4EFFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF9AF4D2-C041-4D6D-84E5-4E9085E4EFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF9AF4D2-C041-4D6D-84E5-4E9085E4EFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF9AF4D2-C041-4D6D-84E5-4E9085E4EFFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EFE883A-60CA-4BBD-AF48-D5479C306663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EFE883A-60CA-4BBD-AF48-D5479C306663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EFE883A-60CA-4BBD-AF48-D5479C306663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EFE883A-60CA-4BBD-AF48-D5479C306663}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

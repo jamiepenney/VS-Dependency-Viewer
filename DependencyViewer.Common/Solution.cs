@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DependencyViewer
+namespace DependencyViewer.Common
 {
-	public class SolutionLoader
+	public class Solution
 	{
 		private readonly TextReader reader;
 		private readonly string solutionFilename;
-		private readonly Dictionary<Guid, ProjectLoader> projects;
+		private readonly Dictionary<Guid, Project> projects;
 		
 		public string SolutionName
 		{
 			get { return Path.GetFileName(solutionFilename); }
 		}
 
-		public List<ProjectLoader> Projects { get { return projects.Values.ToList(); } }
+		public List<Project> Projects { get { return projects.Values.ToList(); } }
 
-		public SolutionLoader(string solutionText, string solutionFilename)
+		public Solution(string solutionText, string solutionFilename)
 		{
 			reader = new StringReader(solutionText);
 			this.solutionFilename = solutionFilename;
-			projects = new Dictionary<Guid, ProjectLoader>();
+			projects = new Dictionary<Guid, Project>();
 		}
 
 		public void LoadProjects()
@@ -35,7 +35,7 @@ namespace DependencyViewer
 			{
 				if (line.StartsWith("Project") && line.Contains(".csproj"))
 				{
-					ProjectLoader project = CreateProjectLoaderFromProjectLine(line, filebase);
+					Project project = CreateProjectLoaderFromProjectLine(line, filebase);
 					projects[project.ProjectIdentifier()] = project;
 
 					line = reader.ReadLine();
@@ -48,7 +48,7 @@ namespace DependencyViewer
 			}
 		}
 
-		private static ProjectLoader CreateProjectLoaderFromProjectLine(string line, string filebase)
+		private static Project CreateProjectLoaderFromProjectLine(string line, string filebase)
 		{
 			string[] chunks = line.Split('"');
 
@@ -57,10 +57,10 @@ namespace DependencyViewer
 			// chunk 8 holds the project guid
 			//string projectGuid = chunks[7];
 
-			return new ProjectLoader(File.ReadAllText(Path.Combine(filebase, projectFilename)));
+			return new Project(File.ReadAllText(Path.Combine(filebase, projectFilename)));
 		}
 
-		public ProjectLoader GetProject(Guid guid)
+		public Project GetProject(Guid guid)
 		{
 			return projects[guid];
 		}

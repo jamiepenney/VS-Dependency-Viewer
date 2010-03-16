@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace DependencyViewer
+namespace DependencyViewer.Common
 {
-	public class ProjectLoader
+	public interface IProject
+	{
+		XmlDocument ProjectFile { get; }
+		string Name();
+		Guid ProjectIdentifier();
+		IList<Guid> ProjectReferences();
+	}
+
+	public class Project : IProject
 	{
 		private readonly XmlDocument projectFile;
 		private readonly XmlNamespaceManager nsManager;
@@ -12,7 +20,7 @@ namespace DependencyViewer
 		private List<Guid> projectReferences;
 		private string name;
 
-		public ProjectLoader(string projectFileXml)
+		public Project(string projectFileXml)
 		{
 			projectFile = new XmlDocument();
 			projectFile.LoadXml(projectFileXml);
@@ -20,6 +28,8 @@ namespace DependencyViewer
 			nsManager = new XmlNamespaceManager(projectFile.NameTable);
 			nsManager.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
 		}
+
+		public XmlDocument ProjectFile { get { return projectFile; } }
 
 		public string Name()
 		{

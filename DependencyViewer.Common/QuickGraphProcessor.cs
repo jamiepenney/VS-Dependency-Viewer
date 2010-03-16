@@ -1,26 +1,32 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
 using System.Drawing;
+using DependencyViewer.Common.Interfaces;
 using QuickGraph;
 using QuickGraph.Graphviz;
 using QuickGraph.Graphviz.Dot;
 
-namespace DependencyViewer
+namespace DependencyViewer.Common
 {
 	public class QuickGraphProcessor
 	{
 		private readonly AdjacencyGraph<int, IEdge<int>> graph = new AdjacencyGraph<int, IEdge<int>>();
-		private readonly Dictionary<ProjectLoader, int> projects = new Dictionary<ProjectLoader, int>();
+		private readonly Dictionary<Project, int> projects = new Dictionary<Project, int>();
 
-		private SolutionLoader sol;
+		private Solution sol;
 
-		public string ProcessSolution(SolutionLoader solution)
+		[ImportMany]
+		public IEnumerable<IGraphProcessor> GraphProcessors { get; set; }
+
+		public string ProcessSolution(Solution solution)
 		{
 			CreateGraph(solution);
 
 			return GenerateDot();
 		}
 
-		private void CreateGraph(SolutionLoader solution)
+		private void CreateGraph(Solution solution)
 		{
 			graph.Clear();
 			projects.Clear();
@@ -53,6 +59,11 @@ namespace DependencyViewer
 			graphviz.FormatVertex += graphviz_FormatVertex;
 			graphviz.FormatEdge += graphviz_FormatEdge;
 
+			foreach (var proc in GraphProcessors)
+			{
+				proc.PreProcessGraph(graphviz.GraphFormat, sol);
+			}
+
 			string text = graphviz.Generate(new FileDotEngine(), "graph");
 
 			return text;
@@ -60,10 +71,15 @@ namespace DependencyViewer
 
 		void graphviz_FormatEdge(object sender, FormatEdgeEventArgs<int, IEdge<int>> e)
 		{
-			//if(e.Edge.Source == 0)
-			//{
-			//    e.EdgeFormatter.Style = GraphvizEdgeStyle.Dashed;
-			//}
+			foreach(var proc in GraphProcessors)
+			{
+				proc.PreProcessEdge(e.EdgeFormatter, sol.Projects[e.Edge.Source], sol.Projects[e.Edge.Target]);
+			}
+
+			foreach (var proc in GraphProcessors)
+			{
+				proc.PostProcessEdge(e.EdgeFormatter, sol.Projects[e.Edge.Source], sol.Projects[e.Edge.Target]);
+			}
 		}
 
 		public string OutputFilename
@@ -73,16 +89,19 @@ namespace DependencyViewer
 
 		private void graphviz_FormatVertex(object sender, FormatVertexEventArgs<int> e)
 		{
-			//if(e.Vertex == 0)
-			//{
-			//    e.VertexFormatter.Label = "Solution";
-			//    e.VertexFormatter.Shape = GraphvizVertexShape.Rectangle;
-			//}
-			
+			Project project = sol.Projects[e.Vertex];
+
+			foreach (var proc in GraphProcessors)
 			{
-				ProjectLoader project = sol.Projects[e.Vertex ];
-				e.VertexFormatter.Label = project.Name();
-				e.VertexFormatter.Shape = GraphvizVertexShape.Ellipse;
+				proc.PreProcessVertex(e.VertexFormatter, project);
+			}
+			
+			e.VertexFormatter.Label = project.Name();
+			e.VertexFormatter.Shape = GraphvizVertexShape.Ellipse;
+
+			foreach (var proc in GraphProcessors)
+			{
+				proc.PostProcessVertex(e.VertexFormatter, project);
 			}
 		}
 	}

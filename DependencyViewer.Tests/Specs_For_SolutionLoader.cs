@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using DependencyViewer.Common;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -11,7 +12,7 @@ namespace DependencyViewer.Tests
 		[Test]
 		public void Returns_A_Single_ProjectLoader()
 		{
-			var loader = new SolutionLoader(File.ReadAllText("1proj_solution.txt"), "1proj_solution.txt");
+			var loader = new Solution(File.ReadAllText("1proj_solution.txt"), "1proj_solution.txt");
 			loader.LoadProjects();
 
 			Assert.That(loader.Projects, Has.Count(1));
@@ -26,7 +27,7 @@ namespace DependencyViewer.Tests
 		[Test]
 		public void Returns_Both_ProjectLoaders()
 		{
-			var loader = new SolutionLoader(File.ReadAllText("2proj_solution.txt"), "2proj_solution.txt");
+			var loader = new Solution(File.ReadAllText("2proj_solution.txt"), "2proj_solution.txt");
 			loader.LoadProjects();
 
 			Assert.That(loader.Projects, Has.Count(2));

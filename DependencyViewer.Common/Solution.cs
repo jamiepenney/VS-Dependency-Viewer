@@ -36,7 +36,7 @@ namespace DependencyViewer.Common
 				if (line.StartsWith("Project") && line.Contains(".csproj"))
 				{
 					Project project = CreateProjectLoaderFromProjectLine(line, filebase);
-					projects[project.ProjectIdentifier()] = project;
+					projects[project.ProjectIdentifier] = project;
 
 					line = reader.ReadLine();
 				}

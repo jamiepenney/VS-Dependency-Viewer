@@ -43,7 +43,7 @@ namespace DependencyViewer.Common
 			{
 				int currentProject = projects[project];				
 				
-				foreach(var projectRef in project.ProjectReferences())
+				foreach(var projectRef in project.ProjectReferences)
 				{
 					int toVertex = projects[solution.GetProject(projectRef)];
 					graph.AddEdge(new Edge<int>(currentProject, toVertex));
@@ -96,7 +96,7 @@ namespace DependencyViewer.Common
 				proc.PreProcessVertex(e.VertexFormatter, project);
 			}
 			
-			e.VertexFormatter.Label = project.Name();
+			e.VertexFormatter.Label = project.Name;
 			e.VertexFormatter.Shape = GraphvizVertexShape.Ellipse;
 
 			foreach (var proc in GraphProcessors)

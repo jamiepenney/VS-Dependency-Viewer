@@ -1,3 +1,11 @@
 
-/DependencyViewer.4.5.resharper.user
-/DependencyViewer.suo
+*.user
+*.suo
+/DependencyViewer.Common/bin/
+/DependencyViewer.Common/obj/
+/DependencyViewer/bin/
+/DependencyViewer/obj/
+/DependencyViewer.Tests/bin/
+/DependencyViewer.Tests/obj/
+/TestProjectProcessor/bin/
+/TestProjectProcessor/obj/

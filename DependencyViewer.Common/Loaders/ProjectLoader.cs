@@ -3,39 +3,39 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
 
-namespace DependencyViewer.Common
+namespace DependencyViewer.Common.Loaders
 {
-	public interface IProject
-	{
-		XmlDocument ProjectFile { get; }
+    public interface IProject
+    {
+        XmlDocument ProjectFile { get; }
         string Name { get; }
         Guid ProjectIdentifier { get; }
-		IList<Guid> ProjectReferences { get; }
+        IList<Guid> ProjectReferences { get; }
         IEnumerable<AssemblyName> ReferencedDLLs { get; }
-	}
+    }
 
-	public class Project : IProject
-	{
-		private readonly XmlDocument projectFile;
-		private readonly XmlNamespaceManager nsManager;
-		private Guid? projectIdentifier;
-		private List<Guid> projectReferences;
-	    private List<AssemblyName> referencedDLLs;
-		private string name;
+    public class ProjectLoader : IProject
+    {
+        private readonly XmlDocument projectFile;
+        private readonly XmlNamespaceManager nsManager;
+        private Guid? projectIdentifier;
+        private List<Guid> projectReferences;
+        private List<AssemblyName> referencedDLLs;
+        private string name;
 
-		public Project(string projectFileXml)
-		{
-			projectFile = new XmlDocument();
-			projectFile.LoadXml(projectFileXml);
+        public ProjectLoader(string projectFileXml)
+        {
+            projectFile = new XmlDocument();
+            projectFile.LoadXml(projectFileXml);
 
-			nsManager = new XmlNamespaceManager(projectFile.NameTable);
-			nsManager.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
-		}
+            nsManager = new XmlNamespaceManager(projectFile.NameTable);
+            nsManager.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
+        }
 
-		public XmlDocument ProjectFile { get { return projectFile; } }
+        public XmlDocument ProjectFile { get { return projectFile; } }
 
-	    public IEnumerable<AssemblyName> ReferencedDLLs
-	    {
+        public IEnumerable<AssemblyName> ReferencedDLLs
+        {
             get
             {
                 if (referencedDLLs == null)
@@ -47,16 +47,16 @@ namespace DependencyViewer.Common
 
                     foreach(XmlNode xmlNode in assemblyNames)
                     {
-                         referencedDLLs.Add(new AssemblyName(xmlNode.Attributes["Include"].Value));
+                        referencedDLLs.Add(new AssemblyName(xmlNode.Attributes["Include"].Value));
                     }
                 }
 
                 return referencedDLLs;
             }
-	    }
+        }
 
-	    public string Name
-		{
+        public string Name
+        {
             get
             {
                 if (name == null)
@@ -68,10 +68,10 @@ namespace DependencyViewer.Common
 
                 return name;
             }
-		}
+        }
 
-		public Guid ProjectIdentifier
-		{
+        public Guid ProjectIdentifier
+        {
             get
             {
                 if (projectIdentifier == null)
@@ -84,10 +84,10 @@ namespace DependencyViewer.Common
 
                 return projectIdentifier.Value;
             }
-		}
+        }
 
-		public IList<Guid> ProjectReferences
-		{
+        public IList<Guid> ProjectReferences
+        {
             get
             {
                 if (projectReferences == null)
@@ -108,6 +108,6 @@ namespace DependencyViewer.Common
 
                 return projectReferences;
             }
-		}
-	}
+        }
+    }
 }

@@ -8,12 +8,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DependencyViewer.Common;
+using DependencyViewer.Common.Loaders;
+using DependencyViewer.Common.Model;
 using DependencyViewer.Properties;
 
 namespace DependencyViewer
 {
 	public partial class MainWindow
 	{
+	    private Solution currentSolution;
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -71,19 +75,47 @@ namespace DependencyViewer
 
 		private void tbFilename_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			bool fileExists = File.Exists(tbFilename.Text);
+			bool fileExists = FilenameIsValid();
 			((TextBox)sender).Background = new SolidColorBrush(fileExists ? Colors.White : Colors.Red);
 			btnRender.IsEnabled = fileExists;
+            
+            LoadSolution();
+            
 		}
 
-		private void btnRender_Click(object sender, RoutedEventArgs e)
-		{
-			var loader = new Solution(File.ReadAllText(tbFilename.Text), tbFilename.Text);
-			loader.LoadProjects();
+	    private bool FilenameIsValid()
+	    {
+	        return File.Exists(tbFilename.Text);
+	    }
 
-			QuickGraphProcessor processor = new QuickGraphProcessor();
+	    private void LoadSolution()
+	    {
+            lbProjects.Items.Clear();
+
+            if (FilenameIsValid() == false) return;
+
+	        SolutionLoader loader = GetLoader();
+	        currentSolution = new Solution(loader);
+
+            foreach (var project in currentSolution.Projects)
+            {
+                lbProjects.Items.Add(project);
+            }
+	    }
+
+	    private SolutionLoader GetLoader()
+	    {
+	        var solutionLoader = new SolutionLoader(File.ReadAllText(tbFilename.Text), tbFilename.Text);
+            solutionLoader.LoadProjects();
+
+	        return solutionLoader;
+	    }
+
+	    private void btnRender_Click(object sender, RoutedEventArgs e)
+		{
+            QuickGraphProcessor processor = new QuickGraphProcessor(currentSolution);
 			Compose(processor);
-			string filename = processor.ProcessSolution(loader);
+			string filename = processor.ProcessSolution();
 
 			GraphVizService graphViz = new GraphVizService();
 			graphViz.ExecGraphViz(filename, tbOutputFilename.Text);

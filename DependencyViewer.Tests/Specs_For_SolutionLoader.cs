@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DependencyViewer.Common;
+using DependencyViewer.Common.Loaders;
 using DependencyViewer.Tests;
 using NUnit.Framework;
 
@@ -8,9 +9,9 @@ namespace Specs_For_SolutionLoader
 {
     internal static class Helper
     {
-        internal static Solution GetLoader(string filename)
+        internal static SolutionLoader GetLoader(string filename)
         {
-            return new Solution(File.ReadAllText(filename), filename);
+            return new SolutionLoader(File.ReadAllText(filename), filename);
         }
     }
 
@@ -21,7 +22,7 @@ namespace Specs_For_SolutionLoader
 		public void Returns_A_Single_ProjectLoader()
 		{
             var filename = GetSolutionFilename("1proj_solution.txt");
-		    Solution loader = Helper.GetLoader(filename);
+		    SolutionLoader loader = Helper.GetLoader(filename);
 			loader.LoadProjects();
 
 			Assert.That(loader.Projects, Has.Count.EqualTo(1));
@@ -37,7 +38,7 @@ namespace Specs_For_SolutionLoader
 		public void Returns_Both_ProjectLoaders()
 		{
             var filename = GetSolutionFilename("2proj_solution.txt");
-            Solution loader = Helper.GetLoader(filename);
+            SolutionLoader loader = Helper.GetLoader(filename);
 			loader.LoadProjects();
 
 			Assert.That(loader.Projects, Has.Count.EqualTo(2));

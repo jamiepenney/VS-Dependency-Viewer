@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Primitives;
 using System.Drawing;
 using DependencyViewer.Common.Interfaces;
+using DependencyViewer.Common.Model;
 using QuickGraph;
 using QuickGraph.Graphviz;
 using QuickGraph.Graphviz.Dot;
@@ -14,37 +14,47 @@ namespace DependencyViewer.Common
 		private readonly AdjacencyGraph<int, IEdge<int>> graph = new AdjacencyGraph<int, IEdge<int>>();
 		private readonly Dictionary<Project, int> projects = new Dictionary<Project, int>();
 
-		private Solution sol;
+	    private readonly Solution solution;
 
-		[ImportMany]
+	    public QuickGraphProcessor(Solution solution)
+	    {
+	        this.solution = solution;
+	    }
+
+	    [ImportMany]
 		public IEnumerable<IGraphProcessor> GraphProcessors { get; set; }
 
-		public string ProcessSolution(Solution solution)
+		public string ProcessSolution()
 		{
-			CreateGraph(solution);
+			CreateGraph();
 
 			return GenerateDot();
 		}
 
-		private void CreateGraph(Solution solution)
+		private void CreateGraph()
 		{
 			graph.Clear();
 			projects.Clear();
 
-			sol = solution;
-
 			for (int i = 0; i < solution.Projects.Count; i++)
 			{
-				projects[solution.Projects[i]] = i;
-				graph.AddVertex(i);
+			    var project = solution.Projects[i];
+			    projects[project] = i;
+				
+                if(project.IsSelected)
+                    graph.AddVertex(i);
 			}
 
 			foreach(var project in solution.Projects)
 			{
+                if (project.IsSelected == false) continue;
+			    
 				int currentProject = projects[project];				
 				
 				foreach(var projectRef in project.ProjectReferences)
 				{
+                    if(solution.GetProject(projectRef).IsSelected == false) continue;
+
 					int toVertex = projects[solution.GetProject(projectRef)];
 					graph.AddEdge(new Edge<int>(currentProject, toVertex));
 				}
@@ -61,7 +71,7 @@ namespace DependencyViewer.Common
 
 			foreach (var proc in GraphProcessors)
 			{
-				proc.PreProcessGraph(graphviz.GraphFormat, sol);
+                proc.PreProcessGraph(graphviz.GraphFormat, solution);
 			}
 
 			string text = graphviz.Generate(new FileDotEngine(), "graph");
@@ -73,7 +83,7 @@ namespace DependencyViewer.Common
 		{
 			foreach(var proc in GraphProcessors)
 			{
-				proc.ProcessEdge(e.EdgeFormatter, sol.Projects[e.Edge.Source], sol.Projects[e.Edge.Target]);
+                proc.ProcessEdge(e.EdgeFormatter, solution.Projects[e.Edge.Source], solution.Projects[e.Edge.Target]);
 			}
 		}
 
@@ -84,7 +94,7 @@ namespace DependencyViewer.Common
 
 		private void graphviz_FormatVertex(object sender, FormatVertexEventArgs<int> e)
 		{
-			Project project = sol.Projects[e.Vertex];
+            Project project = solution.Projects[e.Vertex];
 			
 			e.VertexFormatter.Label = project.Name;
 			e.VertexFormatter.Shape = GraphvizVertexShape.Ellipse;

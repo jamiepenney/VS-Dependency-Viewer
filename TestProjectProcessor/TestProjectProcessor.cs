@@ -16,12 +16,7 @@ namespace TestProjectProcessor
 		    formatter.PageSize = new Size(300, 300);
 		}
 
-
-		public void PreProcessEdge(GraphvizEdge formatter, IProject sourceProject, IProject targetProject)
-		{
-		}
-
-		public void PostProcessEdge(GraphvizEdge formatter, IProject sourceProject, IProject targetProject)
+		public void ProcessEdge(GraphvizEdge formatter, IProject sourceProject, IProject targetProject)
 		{
             if(IsModelProject(targetProject))
             {
@@ -30,11 +25,7 @@ namespace TestProjectProcessor
             }
 		}
 
-		public void PreProcessVertex(GraphvizVertex formatter, IProject project)
-		{
-		}
-
-		public void PostProcessVertex(GraphvizVertex formatter, IProject project)
+		public void ProcessVertex(GraphvizVertex formatter, IProject project)
 		{
 		    if (IsModelProject(project))
             {

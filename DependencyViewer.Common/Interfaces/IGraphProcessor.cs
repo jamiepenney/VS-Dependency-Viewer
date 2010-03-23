@@ -6,9 +6,7 @@ namespace DependencyViewer.Common.Interfaces
 	{
 		void PreProcessGraph(GraphvizGraph formatter, Solution solution);
 
-		void PreProcessEdge(GraphvizEdge formatter, IProject sourceProject, IProject targetProject);
-		void PostProcessEdge(GraphvizEdge formatter, IProject sourceProject, IProject targetProject);
-		void PreProcessVertex(GraphvizVertex formatter, IProject project);
-		void PostProcessVertex(GraphvizVertex formatter, IProject project);
+		void ProcessEdge(GraphvizEdge formatter, IProject sourceProject, IProject targetProject);
+		void ProcessVertex(GraphvizVertex formatter, IProject project);
 	}
 }

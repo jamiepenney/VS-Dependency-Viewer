@@ -73,12 +73,7 @@ namespace DependencyViewer.Common
 		{
 			foreach(var proc in GraphProcessors)
 			{
-				proc.PreProcessEdge(e.EdgeFormatter, sol.Projects[e.Edge.Source], sol.Projects[e.Edge.Target]);
-			}
-
-			foreach (var proc in GraphProcessors)
-			{
-				proc.PostProcessEdge(e.EdgeFormatter, sol.Projects[e.Edge.Source], sol.Projects[e.Edge.Target]);
+				proc.ProcessEdge(e.EdgeFormatter, sol.Projects[e.Edge.Source], sol.Projects[e.Edge.Target]);
 			}
 		}
 
@@ -90,18 +85,13 @@ namespace DependencyViewer.Common
 		private void graphviz_FormatVertex(object sender, FormatVertexEventArgs<int> e)
 		{
 			Project project = sol.Projects[e.Vertex];
-
-			foreach (var proc in GraphProcessors)
-			{
-				proc.PreProcessVertex(e.VertexFormatter, project);
-			}
 			
 			e.VertexFormatter.Label = project.Name;
 			e.VertexFormatter.Shape = GraphvizVertexShape.Ellipse;
 
 			foreach (var proc in GraphProcessors)
 			{
-				proc.PostProcessVertex(e.VertexFormatter, project);
+				proc.ProcessVertex(e.VertexFormatter, project);
 			}
 		}
 	}

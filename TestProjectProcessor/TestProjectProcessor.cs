@@ -30,6 +30,7 @@ namespace TestProjectProcessor
 		    if (IsModelProject(project))
             {
                 formatter.StrokeColor = Color.DeepSkyBlue;
+                formatter.Subgraph = "Model";
             }
 		}
 

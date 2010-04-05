@@ -20,7 +20,7 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="30" />
 			</Grid.RowDefinitions>
-			<Label Grid.ColumnSpan="3" HorizontalContentAlignment="Center" FontWeight="Bold">Solution File:</Label>
+			<Label Grid.ColumnSpan="3" FontWeight="Bold">Solution File:</Label>
 			<TextBox Name="tbFilename" Grid.Column="0" Height="23" Grid.Row="1" BorderThickness="2" TextChanged="tbFilename_TextChanged" />
 			<Button Grid.Column="2" Height="23" Grid.Row="1" Click="FilenameBrowseButton_Click">Browse</Button>
 		</Grid>
@@ -34,12 +34,14 @@
                 <RowDefinition Height="Auto" MinHeight="26" />
                 <RowDefinition Height="40*" />
             </Grid.RowDefinitions>
-            <Label Grid.ColumnSpan="3" HorizontalContentAlignment="Center" FontWeight="Bold">Projects:</Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" >
+                <Label FontWeight="Bold" Margin="1, 1, 10, 1">Projects:</Label>
+            </StackPanel>
             <ListBox Name="lbProjects" Grid.Row="1" BorderThickness="2" VerticalContentAlignment="Stretch" Margin="0,0,0,5">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type Model:Project}">
                         <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsSelected}"
+                            <CheckBox Name="ProjectSelection" IsChecked="{Binding IsSelected}"
                        Width="20" />
                             <TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch" />
                         </StackPanel>
@@ -57,7 +59,7 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="30" />
 			</Grid.RowDefinitions>
-			<Label Grid.ColumnSpan="3" HorizontalContentAlignment="Center" FontWeight="Bold">Output File:</Label>
+			<Label Grid.ColumnSpan="3" FontWeight="Bold">Output File:</Label>
 			<TextBox Name="tbOutputFilename" Grid.Column="0" Height="23" Grid.Row="1" BorderThickness="2">output.png</TextBox>
 			<Button Grid.Column="2" Height="23" Grid.Row="1" Click="OutputBrowseButton_Click">Browse</Button>
 		</Grid>

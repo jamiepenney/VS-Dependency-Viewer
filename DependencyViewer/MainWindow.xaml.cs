@@ -128,6 +128,6 @@ namespace DependencyViewer
 			var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			var container = new CompositionContainer(new DirectoryCatalog(directory));
 			container.ComposeParts(processor);
-		} 
+		}
 	}
 }

@@ -9,4 +9,5 @@
 /DependencyViewer.Tests/obj/
 /TestProjectProcessor/bin/
 /TestProjectProcessor/obj/
-Build/
+/Build/
+/Test Data/

@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,13 +31,29 @@ namespace DependencyViewer
 			if (string.IsNullOrEmpty(Settings.Default.GraphVizPath) == false && File.Exists(Settings.Default.GraphVizPath)) 
 				return;
 
-			MessageBox.Show("Please set the location of GraphViz");
-			var ofd = new System.Windows.Forms.OpenFileDialog();
-			ofd.CheckFileExists = true;
-			ofd.Multiselect = false;
-			ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            // Search for the likely location of graphviz
+		    string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+		    string folderToStartIn = programFiles;
+            
+            var folders = Directory.GetDirectories(programFiles, "Graphviz*")
+                .Select(f => Path.Combine(f, "bin"))
+                .Where(f => Directory.GetFiles(f, "dot.exe").Length > 0)
+                .OrderBy(k => k);
 
-			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (folders.Count() != 0)
+            {
+                folderToStartIn = folders.Last();
+            }
+
+			MessageBox.Show("Please set the location of dot.exe. It should be in the Graphviz bin directory.");
+			var ofd = new System.Windows.Forms.OpenFileDialog
+			              {
+			                  CheckFileExists = true,
+			                  Multiselect = false,
+                              InitialDirectory = folderToStartIn
+			              };
+
+		    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				Settings.Default.GraphVizPath = ofd.FileName;
 				Settings.Default.Save();

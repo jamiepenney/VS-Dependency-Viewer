@@ -9,6 +9,8 @@
 /DependencyViewer.Tests/obj/
 /TestProjectProcessor/bin/
 /TestProjectProcessor/obj/
+/DependencyViewer.Console/bin/
+/DependencyViewer.Console/obj/
 /Build/
 /Test Data/
 /Backup/

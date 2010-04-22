@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IGraphProcessor.cs" />
+    <Compile Include="Interfaces\SolutionAndProjectRules.cs" />
     <Compile Include="Loaders\ProjectLoader.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\Solution.cs" />

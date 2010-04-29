@@ -7,36 +7,54 @@ namespace DependencyViewer.Common.Loaders
 {
     public class SolutionLoader
     {
-        private readonly TextReader reader;
-        private readonly string solutionFilename;
-        private readonly Dictionary<Guid, ProjectLoader> projects;
+        private readonly string _solutionText;
+        private readonly string _solutionFilename;
+        private readonly Dictionary<Guid, ProjectLoader> _projects;
 		
         public string SolutionName
         {
-            get { return Path.GetFileName(solutionFilename); }
+            get { return Path.GetFileName(_solutionFilename); }
         }
 
-        public List<ProjectLoader> Projects { get { return projects.Values.ToList(); } }
+        public List<ProjectLoader> Projects { get { return _projects.Values.ToList(); } }
 
         public SolutionLoader(string solutionText, string solutionFilename)
         {
-            reader = new StringReader(solutionText);
-            this.solutionFilename = solutionFilename;
-            projects = new Dictionary<Guid, ProjectLoader>();
+            _solutionText = solutionText;
+            _solutionFilename = solutionFilename;
+            _projects = new Dictionary<Guid, ProjectLoader>();
         }
 
         public void LoadProjects()
         {
-            string filebase = Path.GetDirectoryName(solutionFilename);
+            string filebase = Path.GetDirectoryName(_solutionFilename);
 
+            var reader = new StringReader(_solutionText);
             string line = reader.ReadLine();
 
             while(line != null)
             {
+                if(string.IsNullOrEmpty(line.Trim()))
+                {
+                    line = reader.ReadLine(); 
+                    continue;
+                }
+                if (line.StartsWith("Microsoft Visual Studio Solution File") == false)
+                {
+                    throw new LoaderException(
+                        "Solution file should start with \"Microsoft Visual Studio Solution File\"");
+                }
+
+                line = reader.ReadLine();
+                break;
+            }
+
+            while(line != null)    
+            {
                 if (line.StartsWith("Project") && line.Contains(".csproj"))
                 {
-                    ProjectLoader projectLoader = CreateProjectLoaderFromProjectLine(line, filebase);
-                    projects[projectLoader.ProjectIdentifier] = projectLoader;
+                    var projectLoader = CreateProjectLoaderFromProjectLine(line, filebase);
+                    _projects[projectLoader.ProjectIdentifier] = projectLoader;
 
                     line = reader.ReadLine();
                 }
@@ -50,19 +68,24 @@ namespace DependencyViewer.Common.Loaders
 
         private static ProjectLoader CreateProjectLoaderFromProjectLine(string line, string filebase)
         {
-            string[] chunks = line.Split('"');
+            var chunks = line.Split('"');
 
             // chunk 6 holds the project filename
             string projectFilename = chunks[5];
             // chunk 8 holds the project guid
             //string projectGuid = chunks[7];
 
-            return new ProjectLoader(File.ReadAllText(Path.Combine(filebase, projectFilename)));
+            var projectFullPath = Path.Combine(filebase, projectFilename);
+
+            if (File.Exists(projectFullPath) == false)
+                throw new LoaderException("Could not find referenced project at " + projectFullPath);
+            
+            return new ProjectLoader(File.ReadAllText(projectFullPath));
         }
 
         public ProjectLoader GetProject(Guid guid)
         {
-            return projects[guid];
+            return _projects[guid];
         }
     }
 }

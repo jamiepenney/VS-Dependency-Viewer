@@ -36,8 +36,8 @@ namespace TestProjectProcessor
 
 	    private bool IsModelProject(Project project)
 	    {
-	        var containsNHibernateAssemblies = project.ReferencedDLLs.Any(rf => rf.Name.Contains("NHibernate"));
-	        var containsTestAssemblies = project.ReferencedDLLs.Any(rf => rf.Name.Contains("nunit"));
+	        var containsNHibernateAssemblies = project.ReferencedDlls.Any(rf => rf.Name.Contains("NHibernate"));
+	        var containsTestAssemblies = project.ReferencedDlls.Any(rf => rf.Name.Contains("nunit"));
 	        return containsNHibernateAssemblies && !containsTestAssemblies;
 	    }
 	}

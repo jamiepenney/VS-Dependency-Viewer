@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "..\NotACSProj", "{DA8BD6BF-1FC6-4905-9426-AED7F6FDB6AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA8BD6BF-1FC6-4905-9426-AED7F6FDB6AF}.Debug|x86.ActiveCfg = Debug|x86
+		{DA8BD6BF-1FC6-4905-9426-AED7F6FDB6AG}.Debug|x86.ActiveCfg = Debug|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

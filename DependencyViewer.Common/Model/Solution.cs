@@ -7,7 +7,7 @@ namespace DependencyViewer.Common.Model
 {
     public class Solution
     {
-        private readonly Dictionary<Guid, Project> projects = new Dictionary<Guid, Project>();
+        private readonly Dictionary<Guid, Project> _projects = new Dictionary<Guid, Project>();
 
         public Solution(SolutionLoader loader)
         {
@@ -15,22 +15,32 @@ namespace DependencyViewer.Common.Model
 
             foreach(var project in loader.Projects)
             {
-                projects.Add(project.ProjectIdentifier, new Project(project));
+                _projects.Add(project.ProjectIdentifier, new Project(project));
+            }
+        }
+
+        public Solution(string solutionName, IEnumerable<Project> projects)
+        {
+            SolutionName = solutionName;
+
+            foreach (var project in projects)
+            {
+                _projects.Add(project.ProjectIdentifier, project);
             }
         }
 
         public string SolutionName { get; private set; }
 
-        public IList<Project> Projects { get { return projects.Values.ToList(); } }
+        public IList<Project> Projects { get { return _projects.Values.ToList(); } }
 
         public Project GetProject(Guid guid)
         {
-            return projects[guid];
+            return _projects[guid];
         }
 
         public void RemoveProject(Guid projectGuid)
         {
-            foreach(var project in projects.Values)
+            foreach(var project in _projects.Values)
             {
                 if(project.HasReferencedProject(projectGuid))
                 {
@@ -38,7 +48,7 @@ namespace DependencyViewer.Common.Model
                 }
             }
 
-            projects.Remove(projectGuid);
+            _projects.Remove(projectGuid);
         }
     }
 }

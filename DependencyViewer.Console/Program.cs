@@ -1,35 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DependencyViewer.Common;
 using DependencyViewer.Common.Loaders;
 using DependencyViewer.Common.Model;
+using DependencyViewer.Common.Rules;
 using Mono.Options;
 
 namespace DependencyViewer.Console
 {
     class Program
     {
-        static string solutionName = "";
-        static readonly List<string> assemblyNames = new List<string>();
-        static readonly List<string> assemblyFolders = new List<string>();
-        static bool showHelp = false;
+        static string _solutionName = "";
+        static readonly List<string> AssemblyNames = new List<string>();
+        static readonly List<string> AssemblyFolders = new List<string>();
+        static bool _showHelp;
 
         static int Main(string[] args)
         {
             var p = ParseArgs(args);
             if (p == null) return 0;
 
-            if (showHelp)
+            if (_showHelp)
             {
                 ShowHelp(p);
                 return 0;
             }
 
-            if (assemblyNames.Count + assemblyFolders.Count == 0)
+            if (AssemblyNames.Count + AssemblyFolders.Count == 0)
             {
                 System.Console.WriteLine("No rules to run. Add an assembly or folder to search using -a or -f");
                 return 0;
@@ -45,12 +46,12 @@ namespace DependencyViewer.Console
 
             var results = runner.RunRules(solution);
 
-            return results.All(r => r.AllRulesPassed) ? 0 : 1;
+            return results.AllRulesPassed ? 0 : 1;
         }
 
         private static Solution SetupSolution()
         {
-            var solutionLoader = new SolutionLoader(File.ReadAllText(solutionName), solutionName);
+            var solutionLoader = new SolutionLoader(File.ReadAllText(_solutionName), _solutionName);
             return new Solution(solutionLoader);
         }
 
@@ -65,12 +66,12 @@ namespace DependencyViewer.Console
         {
             var catalog = new AggregateCatalog();
 
-            foreach(var directory in assemblyFolders)
+            foreach(var directory in AssemblyFolders)
             {
                 catalog.Catalogs.Add(new DirectoryCatalog(directory));
             }
 
-            foreach(var filename in assemblyNames)
+            foreach(var filename in AssemblyNames)
             {
                 var assembly = Assembly.LoadFile(filename);
                 catalog.Catalogs.Add(new AssemblyCatalog(assembly));
@@ -90,21 +91,21 @@ namespace DependencyViewer.Console
                                     {
                                         if(v == null) throw new OptionException("Missing solution file", "sln");
                                         if(File.Exists(v) == false) throw new OptionException("Solution file does not exist", "sln");
-                                        solutionName = v;
+                                        _solutionName = v;
                                     }
                                 },
                             {
                                 "a|assembly",
                                 "the path to an assembly that contains a solution processor",
-                                v => assemblyNames.Add(v)
+                                v => AssemblyNames.Add(v)
                                 },
                             {
                                 "f|folder", "the path to a folder that contains solution processor assemblies",
-                                v => assemblyFolders.Add(v)
+                                v => AssemblyFolders.Add(v)
                                 },
                             {
                                 "h|help", "show this message and exit",
-                                v => showHelp = v != null
+                                v => _showHelp = v != null
                                 },
                         };
 

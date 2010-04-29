@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DependencyViewer.Common;
+using DependencyViewer.Common.Graphing;
 using DependencyViewer.Common.Loaders;
 using DependencyViewer.Common.Model;
 using DependencyViewer.Properties;
@@ -17,7 +18,7 @@ namespace DependencyViewer
 {
 	public partial class MainWindow
 	{
-	    private Solution currentSolution;
+	    private Solution _currentSolution;
 
 		public MainWindow()
 		{
@@ -26,7 +27,7 @@ namespace DependencyViewer
 			SetupGraphVizPath();
 		}
 
-		private void SetupGraphVizPath()
+		private static void SetupGraphVizPath()
 		{
 			if (string.IsNullOrEmpty(Settings.Default.GraphVizPath) == false && File.Exists(Settings.Default.GraphVizPath)) 
 				return;
@@ -67,12 +68,14 @@ namespace DependencyViewer
 
 		private void FilenameBrowseButton_Click(object sender, RoutedEventArgs e)
 		{
-			var ofd = new System.Windows.Forms.OpenFileDialog();
-			ofd.CheckFileExists = true;
-			ofd.Multiselect = false;
-			ofd.InitialDirectory = Directory.GetCurrentDirectory();
+			var ofd = new System.Windows.Forms.OpenFileDialog
+			              {
+			                  CheckFileExists = true,
+			                  Multiselect = false,
+			                  InitialDirectory = Directory.GetCurrentDirectory()
+			              };
 
-			if(ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+		    if(ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				tbFilename.Text = ofd.FileName;
 			}
@@ -80,11 +83,13 @@ namespace DependencyViewer
 
 		private void OutputBrowseButton_Click(object sender, RoutedEventArgs e)
 		{
-			var ofd = new System.Windows.Forms.OpenFileDialog();
-			ofd.Multiselect = false;
-			ofd.InitialDirectory = Directory.GetCurrentDirectory();
+			var ofd = new System.Windows.Forms.OpenFileDialog
+			              {
+			                  Multiselect = false,
+			                  InitialDirectory = Directory.GetCurrentDirectory()
+			              };
 
-			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+		    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				tbOutputFilename.Text = ofd.FileName;
 			}
@@ -112,9 +117,9 @@ namespace DependencyViewer
             if (FilenameIsValid() == false) return;
 
 	        SolutionLoader loader = GetLoader();
-	        currentSolution = new Solution(loader);
+	        _currentSolution = new Solution(loader);
 
-            foreach (var project in currentSolution.Projects)
+            foreach (var project in _currentSolution.Projects)
             {
                 lbProjects.Items.Add(project);
             }
@@ -130,17 +135,17 @@ namespace DependencyViewer
 
 	    private void btnRender_Click(object sender, RoutedEventArgs e)
 		{
-            QuickGraphProcessor processor = new QuickGraphProcessor(currentSolution);
+            var processor = new QuickGraphProcessor(_currentSolution);
 			Compose(processor);
 			string filename = processor.ProcessSolution();
 
-			GraphVizService graphViz = new GraphVizService();
+			var graphViz = new GraphVizService();
 			graphViz.ExecGraphViz(filename, tbOutputFilename.Text);
 
 			Process.Start(tbOutputFilename.Text);
 		}
 
-		private void Compose(QuickGraphProcessor processor)
+		private static void Compose(QuickGraphProcessor processor)
 		{
 			var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			var container = new CompositionContainer(new DirectoryCatalog(directory));

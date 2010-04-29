@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 
@@ -7,66 +8,74 @@ namespace DependencyViewer.Common.Loaders
 {
     public interface IProject
     {
-        XmlDocument ProjectFile { get; }
         string Name { get; }
         Guid ProjectIdentifier { get; }
         IList<Guid> ProjectReferences { get; }
-        IEnumerable<AssemblyName> ReferencedDLLs { get; }
+        IEnumerable<AssemblyName> ReferencedDlls { get; }
+        bool HasReferencedProject(Guid projectGuid);
     }
 
     public class ProjectLoader : IProject
     {
-        private readonly XmlDocument projectFile;
-        private readonly XmlNamespaceManager nsManager;
-        private Guid? projectIdentifier;
-        private List<Guid> projectReferences;
-        private List<AssemblyName> referencedDLLs;
-        private string name;
+        private readonly XmlNamespaceManager _nsManager;
+        private readonly XmlDocument _projectFile;
+        private string _name;
+        private Guid? _projectIdentifier;
+        private List<Guid> _projectReferences;
+        private List<AssemblyName> _referencedDlls;
 
         public ProjectLoader(string projectFileXml)
         {
-            projectFile = new XmlDocument();
-            projectFile.LoadXml(projectFileXml);
+            _projectFile = new XmlDocument();
+            try
+            {
+                _projectFile.LoadXml(projectFileXml);
+            }
+            catch(XmlException e)
+            {
+                throw new LoaderException("Failed to parse the project", e);
+            }
 
-            nsManager = new XmlNamespaceManager(projectFile.NameTable);
-            nsManager.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
+            _nsManager = new XmlNamespaceManager(_projectFile.NameTable);
+            _nsManager.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
         }
 
-        public XmlDocument ProjectFile { get { return projectFile; } }
-
-        public IEnumerable<AssemblyName> ReferencedDLLs
+        public IEnumerable<AssemblyName> ReferencedDlls
         {
             get
             {
-                if (referencedDLLs == null)
+                if (_referencedDlls == null)
                 {
-                    referencedDLLs = new List<AssemblyName>();
+                    _referencedDlls = new List<AssemblyName>();
 
                     var assemblyNames =
-                        projectFile.SelectNodes("/msb:Project/msb:ItemGroup/msb:Reference", nsManager) ?? new EmptyXmlNodeList();
+                        _projectFile.SelectNodes("/msb:Project/msb:ItemGroup/msb:Reference", _nsManager) ??
+                        new EmptyXmlNodeList();
 
-                    foreach(XmlNode xmlNode in assemblyNames)
+                    foreach (XmlNode xmlNode in assemblyNames)
                     {
-                        referencedDLLs.Add(new AssemblyName(xmlNode.Attributes["Include"].Value));
+                        _referencedDlls.Add(new AssemblyName(xmlNode.Attributes["Include"].Value));
                     }
                 }
 
-                return referencedDLLs;
+                return _referencedDlls;
             }
+        }
+
+        public bool HasReferencedProject(Guid projectGuid)
+        {
+            return ProjectReferences.Any(p => p == projectGuid);
         }
 
         public string Name
         {
             get
             {
-                if (name == null)
-                {
-                    name =
-                        projectFile.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:AssemblyName", nsManager).
-                            InnerText;
-                }
-
-                return name;
+                return _name ?? (
+                                   _name =
+                                   _projectFile.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:AssemblyName",
+                                                                _nsManager).InnerText
+                               );
             }
         }
 
@@ -74,15 +83,15 @@ namespace DependencyViewer.Common.Loaders
         {
             get
             {
-                if (projectIdentifier == null)
+                if (_projectIdentifier == null)
                 {
                     string guidValue =
-                        projectFile.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:ProjectGuid", nsManager).
+                        _projectFile.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:ProjectGuid", _nsManager).
                             InnerText;
-                    projectIdentifier = new Guid(guidValue);
+                    _projectIdentifier = new Guid(guidValue);
                 }
 
-                return projectIdentifier.Value;
+                return _projectIdentifier.Value;
             }
         }
 
@@ -90,23 +99,23 @@ namespace DependencyViewer.Common.Loaders
         {
             get
             {
-                if (projectReferences == null)
+                if (_projectReferences == null)
                 {
-                    projectReferences = new List<Guid>();
+                    _projectReferences = new List<Guid>();
 
-                    var nodes = projectFile.SelectNodes("/msb:Project/msb:ItemGroup/msb:ProjectReference", nsManager);
-
-                    if (nodes == null) return projectReferences;
+                    var nodes =
+                        _projectFile.SelectNodes("/msb:Project/msb:ItemGroup/msb:ProjectReference", _nsManager) ??
+                        new EmptyXmlNodeList();
 
                     foreach (XmlNode node in nodes)
                     {
-                        string referenceGuid = node.SelectSingleNode("msb:Project", nsManager).InnerText;
+                        string referenceGuid = node.SelectSingleNode("msb:Project", _nsManager).InnerText;
 
-                        projectReferences.Add(new Guid(referenceGuid));
+                        _projectReferences.Add(new Guid(referenceGuid));
                     }
                 }
 
-                return projectReferences;
+                return _projectReferences;
             }
         }
     }

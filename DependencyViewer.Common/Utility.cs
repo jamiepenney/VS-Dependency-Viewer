@@ -8,7 +8,7 @@ namespace DependencyViewer.Common
     {
         public override XmlNode Item(int index)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
 
         public override IEnumerator GetEnumerator()

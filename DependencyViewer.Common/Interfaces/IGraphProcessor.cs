@@ -1,4 +1,3 @@
-using DependencyViewer.Common.Loaders;
 using DependencyViewer.Common.Model;
 using QuickGraph.Graphviz.Dot;
 

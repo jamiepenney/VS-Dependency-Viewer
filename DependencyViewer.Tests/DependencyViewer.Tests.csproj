@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DependencyViewer.Tests</RootNamespace>
     <AssemblyName>DependencyViewer.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -32,6 +32,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -93,9 +94,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Specs_For_ProjectLoader.cs" />
-    <Compile Include="Specs_For_SolutionLoader.cs" />
+    <Compile Include="Loaders\Specs_For_ProjectLoader.cs" />
+    <Compile Include="Rules\Specs_For_RuleResultsCollection.cs" />
+    <Compile Include="Rules\Specs_For_RuleResult.cs" />
+    <Compile Include="Loaders\Specs_For_SolutionLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rules\Specs_For_RuleRunner.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +119,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Fixtures\SolutionFiles\2proj_solution.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fixtures\SolutionFiles\solution_non_csproj_project.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fixtures\SolutionFiles\solution_bad_proj_filename.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

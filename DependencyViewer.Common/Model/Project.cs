@@ -11,9 +11,15 @@ namespace DependencyViewer.Common.Model
     public class Project : INotifyPropertyChanged
     {
         private readonly HashSet<Guid> _projectRefs = new HashSet<Guid>();
-        private readonly List<AssemblyName> _referencedDLLs = new List<AssemblyName>();
+        private readonly List<AssemblyName> _referencedDlls = new List<AssemblyName>();
 
-        public Project(ProjectLoader loader)
+        public Project(string name, Guid id)
+        {
+            Name = name;
+            ProjectIdentifier = id;
+        }
+
+        public Project(IProject loader)
         {
             Name = loader.Name;
             ProjectIdentifier = loader.ProjectIdentifier;
@@ -21,8 +27,8 @@ namespace DependencyViewer.Common.Model
             foreach(var reference in loader.ProjectReferences)
                 _projectRefs.Add(reference);
 
-            foreach(var reference in loader.ReferencedDLLs)
-                _referencedDLLs.Add(reference);
+            foreach(var reference in loader.ReferencedDlls)
+                _referencedDlls.Add(reference);
 
             IsSelected = true;
         }
@@ -31,7 +37,7 @@ namespace DependencyViewer.Common.Model
         public string Name { get; private set; }
         public Guid ProjectIdentifier { get; private set; }
         public IEnumerable<Guid> ProjectReferences { get { return _projectRefs; } }
-        public IEnumerable<AssemblyName> ReferencedDLLs { get { return _referencedDLLs; } }
+        public IEnumerable<AssemblyName> ReferencedDlls { get { return _referencedDlls; } }
 
         // Mutable Properties
         private bool _isSelected;

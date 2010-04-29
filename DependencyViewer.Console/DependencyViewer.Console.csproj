@@ -11,7 +11,8 @@
     <RootNamespace>DependencyViewer.Console</RootNamespace>
     <AssemblyName>DependencyViewer.Console</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -42,13 +43,15 @@
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RuleRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DependencyViewer.Common\DependencyViewer.Common.csproj">
       <Project>{DF9AF4D2-C041-4D6D-84E5-4E9085E4EFFE}</Project>
       <Name>DependencyViewer.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

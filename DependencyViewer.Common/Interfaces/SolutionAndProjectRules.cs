@@ -20,23 +20,9 @@ namespace DependencyViewer.Common.Interfaces
         IEnumerable<string> FailureMessages { get; }
     }
 
-    public class RulesResultBase : IRulesResult
+    public interface IRulesResultCollection : IRulesResult
     {
-        private readonly List<string> _failureMessages = new List<string>();
+        IEnumerable<IRulesResult> Results { get; }
 
-        public void AddFailure(string message)
-        {
-            _failureMessages.Add(message);
-        }
-
-        public virtual bool AllRulesPassed
-        {
-            get { return _failureMessages.Count == 0; }
-        }
-
-        public virtual IEnumerable<string> FailureMessages
-        {
-            get { return _failureMessages; }
-        }
     }
 }

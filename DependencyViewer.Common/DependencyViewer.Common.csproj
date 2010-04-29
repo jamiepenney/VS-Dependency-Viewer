@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DependencyViewer.Common</RootNamespace>
     <AssemblyName>DependencyViewer.Common</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -32,6 +32,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -108,12 +109,15 @@
   <ItemGroup>
     <Compile Include="Interfaces\IGraphProcessor.cs" />
     <Compile Include="Interfaces\SolutionAndProjectRules.cs" />
+    <Compile Include="Loaders\LoaderException.cs" />
     <Compile Include="Loaders\ProjectLoader.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuickGraphProcessor.cs" />
+    <Compile Include="Graphing\QuickGraphProcessor.cs" />
     <Compile Include="Loaders\SolutionLoader.cs" />
+    <Compile Include="Rules\Results.cs" />
+    <Compile Include="Rules\RuleRunner.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

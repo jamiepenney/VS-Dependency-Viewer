@@ -9,7 +9,7 @@ namespace DependencyViewer.Common.Model
     {
         private readonly Dictionary<Guid, Project> _projects = new Dictionary<Guid, Project>();
 
-        public Solution(SolutionLoader loader)
+        public Solution(ISolution loader)
         {
             SolutionName = loader.SolutionName;
 
@@ -35,20 +35,14 @@ namespace DependencyViewer.Common.Model
 
         public Project GetProject(Guid guid)
         {
+            if (!_projects.ContainsKey(guid)) return null;
+
             return _projects[guid];
         }
 
-        public void RemoveProject(Guid projectGuid)
+        public bool HasProject(Guid guid)
         {
-            foreach(var project in _projects.Values)
-            {
-                if(project.HasReferencedProject(projectGuid))
-                {
-                    project.RemoveReferencedProject(projectGuid);
-                }
-            }
-
-            _projects.Remove(projectGuid);
+            return _projects.ContainsKey(guid);
         }
     }
 }

@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace DependencyViewer.Common.Loaders
 {
-    public class SolutionLoader
+    public interface ISolution
+    {
+        string SolutionName { get; }
+        IEnumerable<IProject> Projects { get; }
+        void LoadProjects();
+        IProject GetProject(Guid guid);
+    }
+
+    public class SolutionLoader : ISolution
     {
         private readonly string _solutionText;
         private readonly string _solutionFilename;
@@ -16,7 +23,7 @@ namespace DependencyViewer.Common.Loaders
             get { return Path.GetFileName(_solutionFilename); }
         }
 
-        public List<ProjectLoader> Projects { get { return _projects.Values.ToList(); } }
+        public IEnumerable<IProject> Projects { get { return _projects.Values; } }
 
         public SolutionLoader(string solutionText, string solutionFilename)
         {
@@ -83,7 +90,7 @@ namespace DependencyViewer.Common.Loaders
             return new ProjectLoader(File.ReadAllText(projectFullPath));
         }
 
-        public ProjectLoader GetProject(Guid guid)
+        public IProject GetProject(Guid guid)
         {
             return _projects[guid];
         }

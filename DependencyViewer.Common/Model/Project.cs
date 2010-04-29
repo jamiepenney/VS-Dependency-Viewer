@@ -8,7 +8,7 @@ using DependencyViewer.Common.Loaders;
 namespace DependencyViewer.Common.Model
 {
     [DebuggerDisplay("{Name}")]
-    public class Project : INotifyPropertyChanged
+    public class Project
     {
         private readonly HashSet<Guid> _projectRefs = new HashSet<Guid>();
         private readonly List<AssemblyName> _referencedDlls = new List<AssemblyName>();
@@ -58,11 +58,6 @@ namespace DependencyViewer.Common.Model
         public bool HasReferencedProject(Guid projectGuid)
         {
             return _projectRefs.Contains(projectGuid);
-        }
-
-        public void RemoveReferencedProject(Guid projectGuid)
-        {
-            _projectRefs.Remove(projectGuid);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

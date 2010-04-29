@@ -95,6 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Loaders\Specs_For_ProjectLoader.cs" />
+    <Compile Include="Model\Helper.cs" />
+    <Compile Include="Model\Specs_For_Project.cs" />
+    <Compile Include="Model\Specs_For_Solution.cs" />
     <Compile Include="Rules\Specs_For_RuleResultsCollection.cs" />
     <Compile Include="Rules\Specs_For_RuleResult.cs" />
     <Compile Include="Loaders\Specs_For_SolutionLoader.cs" />

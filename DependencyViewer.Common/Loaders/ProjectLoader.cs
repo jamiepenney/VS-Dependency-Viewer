@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -17,6 +18,7 @@ namespace DependencyViewer.Common.Loaders
 
     public class ProjectLoader : IProject
     {
+		private readonly string _filename;
         private readonly XmlNamespaceManager _nsManager;
         private readonly XmlDocument _projectFile;
         private string _name;
@@ -24,8 +26,9 @@ namespace DependencyViewer.Common.Loaders
         private List<Guid> _projectReferences;
         private List<AssemblyName> _referencedDlls;
 
-        public ProjectLoader(string projectFileXml)
+        public ProjectLoader(string projectFileXml, string filename)
         {
+			_filename = filename;
             _projectFile = new XmlDocument();
             try
             {
@@ -71,11 +74,7 @@ namespace DependencyViewer.Common.Loaders
         {
             get
             {
-                return _name ?? (
-                                   _name =
-                                   _projectFile.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:AssemblyName",
-                                                                _nsManager).InnerText
-                               );
+                return _name ?? ( _name = GetName() );
             }
         }
 
@@ -118,5 +117,16 @@ namespace DependencyViewer.Common.Loaders
                 return _projectReferences;
             }
         }
+
+
+		private string GetName()
+		{
+			var assemblyName = _projectFile.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:AssemblyName",
+																			_nsManager);
+			if (assemblyName == null)
+				return Path.GetFileNameWithoutExtension(_filename);
+			else
+				return assemblyName.InnerText;
+		}
     }
 }

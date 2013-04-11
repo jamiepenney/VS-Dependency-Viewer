@@ -58,7 +58,7 @@ namespace DependencyViewer.Common.Loaders
 
             while(line != null)    
             {
-                if (line.StartsWith("Project") && line.Contains(".csproj"))
+                if (line.StartsWith("Project") && (line.Contains(".csproj") || line.Contains(".vcxproj")))
                 {
                     var projectLoader = CreateProjectLoaderFromProjectLine(line, filebase);
                     _projects[projectLoader.ProjectIdentifier] = projectLoader;
@@ -87,7 +87,7 @@ namespace DependencyViewer.Common.Loaders
             if (File.Exists(projectFullPath) == false)
                 throw new LoaderException("Could not find referenced project at " + projectFullPath);
             
-            return new ProjectLoader(File.ReadAllText(projectFullPath));
+            return new ProjectLoader(File.ReadAllText(projectFullPath), projectFullPath);
         }
 
         public IProject GetProject(Guid guid)

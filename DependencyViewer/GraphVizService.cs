@@ -22,9 +22,11 @@ namespace DependencyViewer
 			psi.CreateNoWindow = true;
 
 			Process proc = Process.Start(psi);
+
 			string procError = proc.StandardError.ReadToEnd();
 			if (proc == null)
 				throw new Exception("Could not run GraphViz");		
+
 			proc.WaitForExit();
 			if (procError != "")
 				throw new Exception(procError);

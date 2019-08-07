@@ -27,7 +27,7 @@ namespace DependencyViewer
 			if (proc == null)
 				throw new Exception("Could not run GraphViz");
 		
-            proc.WaitForExit();
+			proc.WaitForExit();
 			if (procError != "")
 				throw new Exception(procError);
 		}

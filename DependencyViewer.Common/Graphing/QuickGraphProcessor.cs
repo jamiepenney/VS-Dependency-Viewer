@@ -74,7 +74,7 @@ namespace DependencyViewer.Common.Graphing
 
 			string text = graphviz.Generate(new FileDotEngine(), "graph");
 
-            return text;
+			return text;
 		}
 
 		private void graphviz_FormatEdge(object sender, FormatEdgeEventArgs<int, IEdge<int>> e)

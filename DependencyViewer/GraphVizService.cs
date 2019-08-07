@@ -13,7 +13,8 @@ namespace DependencyViewer
 			if(fi.Exists == false) throw new ArgumentException("dot file does not exist - " + dotFile);
 
 			ProcessStartInfo psi = new ProcessStartInfo(Settings.Default.GraphVizPath);
-			psi.Arguments += "-Tpng";
+            psi.RedirectStandardError = true;
+            psi.Arguments += "-Tpng";
 			psi.Arguments += " -o"+outputFilename;
 			psi.Arguments += " \"" + dotFile + "\"";
 			psi.WindowStyle = ProcessWindowStyle.Hidden;
@@ -21,11 +22,12 @@ namespace DependencyViewer
 			psi.CreateNoWindow = true;
 
 			Process proc = Process.Start(psi);
-
+            string procError = proc.StandardError.ReadToEnd();
 			if (proc == null)
-				throw new Exception("Could not run GraphViz");
-		
+				throw new Exception("Could not run GraphViz");		
 			proc.WaitForExit();
+            if (procError != "")
+                throw new Exception(procError);
 		}
 	}
 }

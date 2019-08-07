@@ -63,7 +63,6 @@ namespace DependencyViewer.Common.Graphing
 		private string GenerateDot()
 		{
 			var graphviz = new GraphvizAlgorithm<int, IEdge<int>>(_graph);
-			graphviz.GraphFormat.Size = new Size(100, 100);
 			graphviz.GraphFormat.Ratio = GraphvizRatioMode.Auto;
 			graphviz.FormatVertex += graphviz_FormatVertex;
 			graphviz.FormatEdge += graphviz_FormatEdge;
@@ -75,7 +74,7 @@ namespace DependencyViewer.Common.Graphing
 
 			string text = graphviz.Generate(new FileDotEngine(), "graph");
 
-			return text;
+            return text;
 		}
 
 		private void graphviz_FormatEdge(object sender, FormatEdgeEventArgs<int, IEdge<int>> e)
